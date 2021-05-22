@@ -19,8 +19,6 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         ResultSet resultSet = null;
         ResultSet resultSetCategory = null;
 
-
-
         try {
             connection = this.newConnection();
 
@@ -130,11 +128,11 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
-                int newsId = resultSet.getInt("id");
                 String title = resultSet.getString("title");
                 String content = resultSet.getString("content");
                 Date createdAt = resultSet.getDate("createdAt");
-                vesti = new Vesti(newsId, title, content, createdAt);
+                Integer visits = resultSet.getInt("visits");
+                vesti = new Vesti(id, title, content, createdAt,visits);
             }
 
             resultSet.close();

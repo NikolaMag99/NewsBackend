@@ -45,6 +45,13 @@ public class Vesti {
         this.createdAt = createdAt;
     }
 
+    public Vesti(Integer id, String title, String content, Date createdAt, Integer visits) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdAt = createdAt;
+        this.visits = visits;
+    }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;

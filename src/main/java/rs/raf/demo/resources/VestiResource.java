@@ -37,6 +37,7 @@ public class VestiResource {
 
     @DELETE
     @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public void delete(@PathParam("id") Integer id) {
         this.vestiService.deleteNews(id);
     }

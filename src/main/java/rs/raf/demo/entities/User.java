@@ -22,12 +22,10 @@ public class User {
     @NotEmpty(message = "Title field is required")
     private String password;
 
-    @NotNull(message = "Type field is required")
-    @NotEmpty(message = "Type field is required")
+
     private int type;
 
-    @NotNull(message = "Status field is required")
-    @NotEmpty(message = "Status field is required")
+
     private int status;
 
     public User() {

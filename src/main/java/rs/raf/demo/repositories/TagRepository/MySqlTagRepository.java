@@ -1,6 +1,5 @@
 package rs.raf.demo.repositories.TagRepository;
 
-import rs.raf.demo.entities.Kategorija;
 import rs.raf.demo.entities.Tag;
 import rs.raf.demo.repositories.MySqlAbstractRepository;
 
@@ -23,9 +22,8 @@ public class MySqlTagRepository extends MySqlAbstractRepository implements TagRe
 
             String[] generatedColumns = {"id"};
 
-            preparedStatement = connection.prepareStatement("INSERT INTO tag (id, main_word) VALUES(?, ?)", generatedColumns);
-            preparedStatement.setInt(1, tag.getId());
-            preparedStatement.setString(2, tag.getMainWord());
+            preparedStatement = connection.prepareStatement("INSERT INTO tag (main_word) VALUES(?)", generatedColumns);
+            preparedStatement.setString(1, tag.getMainWord());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
@@ -74,7 +72,7 @@ public class MySqlTagRepository extends MySqlAbstractRepository implements TagRe
     }
 
     @Override
-    public Tag findTag(Integer id) {
+    public Tag findTag(String id) {
         Tag tag = null;
 
         Connection connection = null;
@@ -83,15 +81,15 @@ public class MySqlTagRepository extends MySqlAbstractRepository implements TagRe
         try {
             connection = this.newConnection();
 
-            preparedStatement = connection.prepareStatement("SELECT * FROM tag as t where t.id = ?");
-            preparedStatement.setInt(1, id);
+            preparedStatement = connection.prepareStatement("SELECT * FROM tag as t where t.main_word = ?");
+            preparedStatement.setString(1, id);
             resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
 
-                String mainWord = resultSet.getString("main_word");
+              Integer idTag = resultSet.getInt("id");
 
-                tag = new Tag(id, mainWord);
+              tag = new Tag(idTag,id);
             }
 
             resultSet.close();

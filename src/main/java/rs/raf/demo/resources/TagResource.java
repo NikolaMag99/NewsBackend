@@ -30,14 +30,15 @@ public class TagResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("/{main_word}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Tag find(@PathParam("id") Integer id) {
+    public Tag find(@PathParam("main_word") String id) {
         return this.tagService.findTag(id);
     }
 
     @DELETE
     @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public void delete(@PathParam("id") Integer id) {
         this.tagService.deleteTag(id);
     }

@@ -1,5 +1,7 @@
 package rs.raf.demo.resources;
 
+import rs.raf.demo.entities.Kategorija;
+import rs.raf.demo.entities.User;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.services.UserService;
 
@@ -9,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Path("/users")
@@ -34,4 +37,34 @@ public class UserResource {
 
         return Response.ok(response).build();
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<User> all()
+    {
+        return this.userService.allUser();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    public User create(@Valid User user) {
+        return this.userService.addUser(user);
+    }
+
+    @GET
+    @Path("/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User find(@PathParam("email") String email) {
+        return this.userService.findUser(email);
+    }
+
+    @POST
+    @Path("/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User updateUser(@Valid User user, @PathParam("email") String email)
+    {
+        return this.userService.updateUser(user, email);
+    }
+
+
 }
