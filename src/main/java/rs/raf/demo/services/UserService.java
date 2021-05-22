@@ -16,12 +16,12 @@ public class UserService {
     @Inject
     UserRepository userRepository;
 
-    public String login(String username, String password)
+    public String login(String email, String password)
     {
         String hashedPassword = DigestUtils.sha256Hex(password);
 
-        User user = this.userRepository.findUser(username);
-        if (user == null || !user.getHashedPassword().equals(hashedPassword)) {
+        User user = this.userRepository.findUser(email);
+        if (user == null || !user.getPassword().equals(hashedPassword)) {
             return null;
         }
 
@@ -35,8 +35,8 @@ public class UserService {
         return JWT.create()
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
-                .withSubject(username)
-                .withClaim("role", user.getRole())
+                .withSubject(email)
+                .withClaim("role", user.getType())
                 .sign(algorithm);
     }
 
@@ -57,4 +57,5 @@ public class UserService {
 
         return true;
     }
+
 }

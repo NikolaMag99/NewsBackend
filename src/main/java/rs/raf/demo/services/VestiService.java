@@ -15,19 +15,19 @@ public class VestiService {
     @Inject
     private VestiRepository vestiRepository;
 
-    public Vesti addSubject(Vesti vesti) {
-        return this.vestiRepository.addSubject(vesti);
+    public Vesti addNews(Vesti vesti) {
+        return this.vestiRepository.addNews(vesti);
     }
 
-    public List<Vesti> allSubjects() {
-        return this.vestiRepository.allSubjects();
+    public List<Vesti> allNews() {
+        return this.vestiRepository.allNews();
     }
 
-    public Vesti findSubject(Integer id) {
-        return this.vestiRepository.findSubject(id);
+    public Vesti findNews(Integer id) {
+        return this.vestiRepository.findNews(id);
     }
 
-    public void deleteSubject(Integer id) {
-        this.vestiRepository.deleteSubject(id);
+    public void deleteNews(Integer id) {
+        this.vestiRepository.deleteNews(id);
     }
 }

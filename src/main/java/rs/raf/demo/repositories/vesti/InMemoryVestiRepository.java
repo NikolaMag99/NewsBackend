@@ -14,7 +14,7 @@ public class InMemoryVestiRepository implements VestiRepository {
     }
 
     @Override
-    public synchronized Vesti addSubject(Vesti vesti) {
+    public synchronized Vesti addNews(Vesti vesti) {
         Integer id = vestis.size();
         vesti.setId(id);
         vestis.add(Math.toIntExact(id), vesti);
@@ -23,17 +23,17 @@ public class InMemoryVestiRepository implements VestiRepository {
     }
 
     @Override
-    public List<Vesti> allSubjects() {
+    public List<Vesti> allNews() {
         return new ArrayList<>(vestis);
     }
 
     @Override
-    public Vesti findSubject(Integer id) {
+    public Vesti findNews(Integer id) {
         return vestis.get(id);
     }
 
     @Override
-    public void deleteSubject(Integer id) {
+    public void deleteNews(Integer id) {
         vestis.remove(id.intValue());
     }
 }

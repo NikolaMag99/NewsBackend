@@ -6,7 +6,7 @@ import javax.validation.constraints.NotNull;
 
 public class Kategorija {
 
-    private Integer id;
+
 
     @NotNull(message = "Name field is required")
     @NotEmpty(message = "Name field is required")
@@ -25,13 +25,7 @@ public class Kategorija {
         this.description = description;
     }
 
-    public Integer getId() {
-        return id;
-    }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

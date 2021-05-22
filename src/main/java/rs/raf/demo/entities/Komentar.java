@@ -17,15 +17,22 @@ public class Komentar {
     @NotEmpty(message = "Content field is required")
     private String content;
 
-
+    @NotNull(message = "Date field is required")
+    @NotEmpty(message = "Date field is required")
     private Date createdAt;
+
+
+    @NotNull(message = "News field is required")
+    @NotEmpty(message = "News field is required")
+    private Vesti vest;
 
     public Komentar() {
     }
 
-    public Komentar(@NotNull(message = "Title field is required") @NotEmpty(message = "Title field is required") String author, @NotNull(message = "Content field is required") @NotEmpty(message = "Content field is required") String content) {
+    public Komentar(String author, String content, Date createdAt) {
         this.author = author;
         this.content = content;
+        this.createdAt = createdAt;
     }
 
     public Integer getId() {

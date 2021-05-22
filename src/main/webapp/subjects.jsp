@@ -27,7 +27,7 @@
     <br>
     <br>
 
-    <div id="vesti-links">
+    <div id="news-links">
 
     </div>
     <h1 id="title"></h1>
@@ -44,20 +44,20 @@
         method: 'GET'
     }).then(function (response) {
         return response.json();
-    }).then(function (vestis) {
-        for (const vesti of vestis) {
+    }).then(function (news) {
+        for (const vesti of news) {
             addSubjectElements(vesti)
         }
     })
 
     function addSubjectElements(vesti) {
-        const subjectLinks = document.getElementById('vesti-links');
+        const subjectLinks = document.getElementById('news-links');
 
         const linkWrapperDiv = document.createElement('div');
 
         const subjectLink = document.createElement('a');
         subjectLink.innerText = vesti.title;
-        subjectLink.href = '/vestis/' + vesti.id;
+        subjectLink.href = '/news/' + vesti.id;
 
 
         const removeButton = document.createElement('button');
@@ -79,7 +79,7 @@
     }
 
     function deleteSubject(id) {
-        return fetch('/api/vestis/' + id, {
+        return fetch('/api/news/' + id, {
             method: 'DELETE'
         })
     }
@@ -93,7 +93,7 @@
         const title = subjectTitleElement.value;
         const content = contentElement.value;
 
-        fetch('/api/vestis', {
+        fetch('/api/news', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

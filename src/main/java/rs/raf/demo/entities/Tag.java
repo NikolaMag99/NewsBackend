@@ -6,24 +6,23 @@ import javax.validation.constraints.NotNull;
 
 public class Tag {
 
+
     private Integer id;
 
-    @NotNull(message = "Title field is required")
-    @NotEmpty(message = "Title field is required")
-    private String title;
+    @NotNull(message = "Main word field is required")
+    @NotEmpty(message = "Main word field is required")
+    private String mainWord;
 
-    @NotNull(message = "Content field is required")
-    @NotEmpty(message = "Content field is required")
-    private String content;
+
 
     public Tag() {
     }
 
-    public Tag(String title, String content) {
-        this();
-        this.title = title;
-        this.content = content;
+    public Tag(Integer id, String mainWord) {
+        this.id = id;
+        this.mainWord = mainWord;
     }
+
 
     public Integer getId() {
         return id;
@@ -33,19 +32,11 @@ public class Tag {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getMainWord() {
+        return mainWord;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setMainWord(String mainWord) {
+        this.mainWord = mainWord;
     }
 }

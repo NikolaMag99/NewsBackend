@@ -9,7 +9,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.List;
 
-@Path("/subjects")
+@Path("/news")
 public class VestiResource {
 
     @Inject
@@ -19,26 +19,26 @@ public class VestiResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Vesti> all()
     {
-        return this.vestiService.allSubjects();
+        return this.vestiService.allNews();
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Vesti create(@Valid Vesti vesti) {
-        return this.vestiService.addSubject(vesti);
+        return this.vestiService.addNews(vesti);
     }
 
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Vesti find(@PathParam("id") Integer id) {
-        return this.vestiService.findSubject(id);
+        return this.vestiService.findNews(id);
     }
 
     @DELETE
     @Path("/{id}")
     public void delete(@PathParam("id") Integer id) {
-        this.vestiService.deleteSubject(id);
+        this.vestiService.deleteNews(id);
     }
 
 }

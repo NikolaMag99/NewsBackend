@@ -17,18 +17,23 @@ public class User {
     @NotEmpty(message = "Title field is required")
     private String last_name;
 
+
     @NotNull(message = "Title field is required")
     @NotEmpty(message = "Title field is required")
     private String password;
 
+    @NotNull(message = "Type field is required")
+    @NotEmpty(message = "Type field is required")
     private int type;
 
+    @NotNull(message = "Status field is required")
+    @NotEmpty(message = "Status field is required")
     private int status;
 
     public User() {
     }
 
-    public User(@NotNull(message = "Title field is required") @NotEmpty(message = "Title field is required") String email, @NotNull(message = "Title field is required") @NotEmpty(message = "Title field is required") String first_name, @NotNull(message = "Title field is required") @NotEmpty(message = "Title field is required") String last_name, @NotNull(message = "Title field is required") @NotEmpty(message = "Title field is required") String password) {
+    public User(String email, String first_name, String last_name, String password) {
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;
