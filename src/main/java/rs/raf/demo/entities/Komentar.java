@@ -24,12 +24,14 @@ public class Komentar {
 
     @NotNull(message = "News field is required")
     @NotEmpty(message = "News field is required")
+
     private Vesti vest;
 
     public Komentar() {
     }
 
-    public Komentar(String author, String content, Date createdAt) {
+    public Komentar(Integer id, String author, String content, Date createdAt) {
+        this.id = id;
         this.author = author;
         this.content = content;
         this.createdAt = createdAt;
@@ -65,5 +67,13 @@ public class Komentar {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Vesti getVest() {
+        return vest;
+    }
+
+    public void setVest(Vesti vest) {
+        this.vest = vest;
     }
 }

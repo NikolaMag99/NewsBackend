@@ -8,7 +8,7 @@ public interface UserRepository {
     public User findUser(String email);
     public List<User> allUser();
     public User addUser(User user);
-    public User userActivity(String email);
+    public Integer userActivity(String email);
     public User updateUser(User user, String email);
 
 }

@@ -74,6 +74,11 @@ public class UserService {
         return this.userRepository.findUser(name);
     }
 
+    public Integer userActivity(String email) {
+
+        return this.userRepository.userActivity(email);
+    }
+
     public User updateUser(User user, String email) {
         return this.userRepository.updateUser(user, email);
     }

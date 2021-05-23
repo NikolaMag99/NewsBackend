@@ -58,6 +58,14 @@ public class UserResource {
         return this.userService.findUser(email);
     }
 
+
+    @GET
+    @Path("/status/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Integer userActivity(@PathParam("email") String email) {
+        return this.userService.userActivity(email);
+    }
+
     @POST
     @Path("/{email}")
     @Produces(MediaType.APPLICATION_JSON)

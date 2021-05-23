@@ -142,12 +142,12 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
             connection = this.newConnection();
 
 
-            if (name.equals(kategorija.getName())) {
+            if (!(name.equals(kategorija.getName()))) {
                 preparedStatement = connection.prepareStatement("select * from kategorija where name = ? ");
                 preparedStatement.setString(1, kategorija.getName());
                 resultSet = preparedStatement.executeQuery();
             }
-            if(!resultSet.next() || name.equals(kategorija.getName())) {
+            if(resultSet == null || !resultSet.next() || name.equals(kategorija.getName())) {
                 preparedStatement = connection.prepareStatement("update kategorija as k set k.name = ?, k.description = ? where k.name = ?");
                 preparedStatement.setString(1, kategorija.getName());
                 preparedStatement.setString(2, kategorija.getDescription());
@@ -163,8 +163,10 @@ public class MySqlCategoryRepository extends MySqlAbstractRepository implements 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            if (resultSet != null) {
+                this.closeResultSet(resultSet);
+            }
             this.closeStatement(preparedStatement);
-            this.closeResultSet(resultSet);
             this.closeConnection(connection);
         }
 
