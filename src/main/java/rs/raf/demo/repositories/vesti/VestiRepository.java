@@ -9,4 +9,5 @@ public interface VestiRepository {
     public List<Vesti> allNews();
     public Vesti findNews(Integer id);
     public void deleteNews(Integer id);
+    public List<Vesti> allByCategory(String name);
 }

@@ -133,6 +133,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
                 Date createdAt = resultSet.getDate("createdAt");
                 Integer visits = resultSet.getInt("visits");
                 vesti = new Vesti(id, title, content, createdAt,visits);
+
             }
 
             resultSet.close();
@@ -169,4 +170,77 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             this.closeConnection(connection);
         }
     }
+
+    @Override
+    public List<Vesti> allByCategory(String name) {
+        List<Vesti> vestiList = new ArrayList<>();
+
+        Connection connection = null;
+        Statement statement = null;
+
+        ResultSet resultSet = null;
+        ResultSet resultSetAutor = null;
+        ResultSet resultSetKategorija = null;
+
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("select * from vest where kategorija like ? order by createdAt desc");
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Vesti vesti = new Vesti(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"), resultSet.getDate("createdAt"));
+                vesti.setVisits(resultSet.getInt("visits"));
+
+                preparedStatement = connection.prepareStatement("select * from users where email = ?");
+                preparedStatement.setString(1, resultSet.getString("author"));
+                resultSetAutor = preparedStatement.executeQuery();
+                while (resultSetAutor.next()){
+                    User user = new User(resultSetAutor.getString("email"), resultSetAutor.getString("first_name"), resultSetAutor.getString("last_name"), resultSetAutor.getString("password"));
+                    user.setStatus(resultSetAutor.getInt("status"));
+                    user.setType(resultSetAutor.getInt("type"));
+
+                    synchronized (this) {
+                        vesti.setAuthor(user);
+                    }
+                }
+
+                preparedStatement = connection.prepareStatement("select * from kategorija where name = ?");
+                preparedStatement.setString(1, resultSet.getString("kategorija"));
+                resultSetKategorija = preparedStatement.executeQuery();
+                while (resultSetKategorija.next()) {
+                    String ime = resultSetKategorija.getString("name");
+                    String description = resultSetKategorija.getString("description");
+
+                    Kategorija kategorija = new Kategorija(ime, description);
+
+                    synchronized (this) {
+                        vesti.setKategorija(kategorija);
+                    }
+                }
+                vestiList.add(vesti);
+            }
+
+            resultSet.close();
+            resultSetAutor.close();
+            resultSetKategorija.close();
+            preparedStatement.close();
+            connection.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+            this.closeResultSet(resultSetAutor);
+            this.closeResultSet(resultSetKategorija);
+        }
+
+        return vestiList;
+    }
+
 }

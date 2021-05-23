@@ -42,4 +42,10 @@ public class VestiResource {
         this.vestiService.deleteNews(id);
     }
 
+    @GET
+    @Path("kategorija/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Vesti> allByCategory(@PathParam("name") String name) {
+        return this.vestiService.allByCategory(name);
+    }
 }

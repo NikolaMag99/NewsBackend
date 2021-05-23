@@ -30,4 +30,9 @@ public class VestiService {
     public void deleteNews(Integer id) {
         this.vestiRepository.deleteNews(id);
     }
+
+    public List<Vesti> allByCategory(String name) {
+        return this.vestiRepository.allByCategory(name);
+    }
+
 }
