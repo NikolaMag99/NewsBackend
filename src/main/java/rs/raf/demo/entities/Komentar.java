@@ -17,10 +17,10 @@ public class Komentar {
     @NotEmpty(message = "Content field is required")
     private String content;
 
-
+    // TODO
     private Date createdAt;
 
-
+    // TODO
     private Vesti vest;
 
     public Komentar() {

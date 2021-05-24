@@ -19,15 +19,16 @@ public class Vesti {
     private String content;
 
 
+    // TODO
     private Date createdAt;
 
-
+    // TODO
     private Integer visits;
 
-
+    // TODO
     private User author;
 
-
+    // TODO
     private Kategorija kategorija;
 
 
