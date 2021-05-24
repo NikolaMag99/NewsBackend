@@ -18,19 +18,16 @@ public class Vesti {
     @NotEmpty(message = "Content field is required")
     private String content;
 
-    @NotNull(message = "Date field is required")
-    @NotEmpty(message = "Date field is required")
+
     private Date createdAt;
 
 
     private Integer visits;
 
-    @NotNull(message = "Author field is required")
-    @NotEmpty(message = "Author field is required")
+
     private User author;
 
-    @NotNull(message = "Category field is required")
-    @NotEmpty(message = "Category field is required")
+
     private Kategorija kategorija;
 
 

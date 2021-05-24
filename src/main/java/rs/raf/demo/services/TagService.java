@@ -27,6 +27,11 @@ public class TagService {
         return this.tagRepository.findTag(id);
     }
 
+    public Tag findTagById(Integer id) {
+        return this.tagRepository.findTagById(id);
+    }
+
+
     public void deleteTag(Integer id) {
         this.tagRepository.deleteTag(id);
     }

@@ -25,10 +25,12 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
             java.util.Date date = new java.util.Date();
             String[] generatedColumns = {"id"};
 
-            preparedStatement = connection.prepareStatement("INSERT INTO komentar (author, content, createdAt) VALUES(?,?,?,?)", generatedColumns);
+            preparedStatement = connection.prepareStatement("INSERT INTO komentar (author, content, createdAt, vest) VALUES(?,?,?,?)", generatedColumns);
+            java.sql.Date sqlDate = new java.sql.Date(komentar.getCreatedAt().getTime());
             preparedStatement.setString(1, komentar.getAuthor());
             preparedStatement.setString(2, komentar.getContent());
-            preparedStatement.setDate(3, (Date) date);
+            preparedStatement.setDate(3, sqlDate);
+            preparedStatement.setInt(4, komentar.getVest().getId());
 
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
@@ -74,6 +76,7 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
                     Vesti vesti = new Vesti(resultSetNews.getInt("id"), resultSetNews.getString("title"), resultSetNews.getString("content"), resultSetNews.getDate("createdAt"));
                     vesti.setVisits(resultSetNews.getInt("visits"));
 
+
                     synchronized (this) {
                         koementar.setVest(vesti);
                     }
@@ -99,6 +102,7 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        ResultSet resultSetNews = null;
         try {
             connection = this.newConnection();
 
@@ -113,6 +117,18 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
                 Date createdAt = resultSet.getDate("createdAt");
 
                 komentar = new Komentar(id, author, content,createdAt);
+                preparedStatement = connection.prepareStatement("select * from vest where id = ?");
+                preparedStatement.setInt(1, resultSet.getInt("vest"));
+                resultSetNews = preparedStatement.executeQuery();
+                while (resultSetNews.next()){
+                    Vesti vesti = new Vesti(resultSetNews.getInt("id"), resultSetNews.getString("title"), resultSetNews.getString("content"), resultSetNews.getDate("createdAt"));
+                    vesti.setVisits(resultSetNews.getInt("visits"));
+
+
+                    synchronized (this) {
+                        komentar.setVest(vesti);
+                    }
+                }
             }
 
             resultSet.close();

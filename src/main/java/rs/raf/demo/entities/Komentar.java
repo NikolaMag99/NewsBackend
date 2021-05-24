@@ -17,13 +17,9 @@ public class Komentar {
     @NotEmpty(message = "Content field is required")
     private String content;
 
-    @NotNull(message = "Date field is required")
-    @NotEmpty(message = "Date field is required")
+
     private Date createdAt;
 
-
-    @NotNull(message = "News field is required")
-    @NotEmpty(message = "News field is required")
 
     private Vesti vest;
 

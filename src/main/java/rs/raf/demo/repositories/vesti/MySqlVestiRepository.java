@@ -1,15 +1,23 @@
 package rs.raf.demo.repositories.vesti;
 
 import rs.raf.demo.entities.Kategorija;
+import rs.raf.demo.entities.Tag;
 import rs.raf.demo.entities.User;
 import rs.raf.demo.entities.Vesti;
 import rs.raf.demo.repositories.MySqlAbstractRepository;
+import rs.raf.demo.repositories.TagRepository.TagRepository;
 
+import javax.inject.Inject;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MySqlVestiRepository extends MySqlAbstractRepository implements VestiRepository {
+
+//    @Inject
+//    private VestiRepository vestiRepository;
+    @Inject
+    private TagRepository  tagRepository;
 
     @Override
     public Vesti addNews(Vesti vesti) {
@@ -24,24 +32,34 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
 
             String[] generatedColumns = {"id"};
 
+
+
             preparedStatement = connection.prepareStatement("select * from kategorija as k where name equals ", generatedColumns);
 
-            preparedStatement = connection.prepareStatement("INSERT INTO vest (title, content, createdAt) VALUES(?, ?, ?)", generatedColumns);
+            preparedStatement = connection.prepareStatement("INSERT INTO vest (title, content, createdAt, visits, author, kategorija) VALUES(?, ?,?, ?,?,?)", generatedColumns);
+            java.sql.Date sqlDate = new java.sql.Date(vesti.getCreatedAt().getTime());
             preparedStatement.setString(1, vesti.getTitle());
             preparedStatement.setString(2, vesti.getContent());
-            preparedStatement.setDate(3, (Date) vesti.getCreatedAt());
+            preparedStatement.setDate(3, sqlDate);
+            preparedStatement.setInt(4, 0);
+            preparedStatement.setString(5, vesti.getAuthor().getEmail());
+            preparedStatement.setString(6, vesti.getKategorija().getName());
+
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
 
             if (resultSet.next()) {
                 vesti.setId(resultSet.getInt(1));
+
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             this.closeStatement(preparedStatement);
-            this.closeResultSet(resultSet);
+            if (resultSet != null) {
+                this.closeResultSet(resultSet);
+            }
             this.closeConnection(connection);
         }
 
@@ -111,8 +129,71 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         return vestiList;
     }
 
+    @Override
+    public List<Vesti> allNewsByVisits() {
+        List<Vesti> vestiList = new ArrayList<>();
 
-//     resultSet = statement.executeQuery("select * from vest order by visits desc ");
+        Connection connection = null;
+        Statement statement = null;
+
+        ResultSet resultSet = null;
+        ResultSet resultSetUser = null;
+        ResultSet resultSetCategory = null;
+
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = this.newConnection();
+
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select * from vest order by visits desc");
+
+            while (resultSet.next()){
+                Vesti vesti = new Vesti(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"), resultSet.getDate("createdAt"));
+                vesti.setVisits(resultSet.getInt("visits"));
+
+                preparedStatement = connection.prepareStatement("select * from users where email = ?");
+                preparedStatement.setString(1, resultSet.getString("author"));
+                resultSetUser = preparedStatement.executeQuery();
+
+                while (resultSetUser.next()){
+                    User user = new User(resultSetUser.getString("email"), resultSetUser.getString("first_name"), resultSetUser.getString("last_name"), resultSetUser.getString("password"));
+                    user.setStatus(resultSetUser.getInt("status"));
+                    user.setType(resultSetUser.getInt("type"));
+
+                    synchronized (this) {
+                        vesti.setAuthor(user);
+                    }
+                }
+
+                preparedStatement = connection.prepareStatement("select * from kategorija where name = ?");
+                preparedStatement.setString(1, resultSet.getString("kategorija"));
+                resultSetCategory = preparedStatement.executeQuery();
+
+                while (resultSetCategory.next()){
+                    Kategorija category = new Kategorija(resultSetCategory.getString("name"), resultSetCategory.getString("description"));
+
+                    synchronized (this) {
+                        vesti.setKategorija(category);
+                    }
+                }
+
+                vestiList.add(vesti);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(statement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return vestiList;
+    }
+
+
+    //     resultSet = statement.executeQuery("select * from vest order by visits desc ");
     @Override
     public Vesti findNews(Integer id) {
         Vesti vesti = null;
@@ -120,6 +201,9 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
+        ResultSet resultSetUser = null;
+        ResultSet resultSetCategory = null;
+
         try {
             connection = this.newConnection();
 
@@ -134,6 +218,32 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
                 Integer visits = resultSet.getInt("visits");
                 vesti = new Vesti(id, title, content, createdAt,visits);
 
+
+                preparedStatement = connection.prepareStatement("select * from users where email = ?");
+                preparedStatement.setString(1, resultSet.getString("author"));
+                resultSetUser = preparedStatement.executeQuery();
+
+                while (resultSetUser.next()){
+                    User user = new User(resultSetUser.getString("email"), resultSetUser.getString("first_name"), resultSetUser.getString("last_name"), resultSetUser.getString("password"));
+                    user.setStatus(resultSetUser.getInt("status"));
+                    user.setType(resultSetUser.getInt("type"));
+
+                    synchronized (this) {
+                        vesti.setAuthor(user);
+                    }
+                }
+
+                preparedStatement = connection.prepareStatement("select * from kategorija where name = ?");
+                preparedStatement.setString(1, resultSet.getString("kategorija"));
+                resultSetCategory = preparedStatement.executeQuery();
+
+                while (resultSetCategory.next()){
+                    Kategorija category = new Kategorija(resultSetCategory.getString("name"), resultSetCategory.getString("description"));
+
+                    synchronized (this) {
+                        vesti.setKategorija(category);
+                    }
+                }
             }
 
             resultSet.close();
@@ -242,5 +352,133 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
 
         return vestiList;
     }
+
+    @Override
+    public List<Vesti> allByTag(Integer id) {
+        List<Vesti> vestiList = new ArrayList<>();
+        Vesti vesti = null;
+
+        Connection connection = null;
+        Statement statement = null;
+
+        ResultSet resultSet = null;
+        ResultSet resultSetAutor = null;
+        ResultSet resultSetTag = null;
+        ResultSet resultSetUser = null;
+        ResultSet resultSetCategory = null;
+
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatement1 = null;
+
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("select * from tag_vesti where idTag = ?");
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+//                System.out.println(resultSet.getInt("idVest"));
+                Integer idVesti = resultSet.getInt("idVest");
+
+                statement = connection.createStatement();
+                resultSet = statement.executeQuery("SELECT * FROM vest where id = " + idVesti);
+                if(resultSet.next()) {
+                    String title = resultSet.getString("title");
+                    String content = resultSet.getString("content");
+                    Date createdAt = resultSet.getDate("createdAt");
+                    Integer visits = resultSet.getInt("visits");
+                    vesti = new Vesti(idVesti, title, content, createdAt,visits);
+
+
+                    preparedStatement = connection.prepareStatement("select * from users where email = ?");
+                    preparedStatement.setString(1, resultSet.getString("author"));
+                    resultSetUser = preparedStatement.executeQuery();
+
+                    while (resultSetUser.next()){
+                        User user = new User(resultSetUser.getString("email"), resultSetUser.getString("first_name"), resultSetUser.getString("last_name"), resultSetUser.getString("password"));
+                        user.setStatus(resultSetUser.getInt("status"));
+                        user.setType(resultSetUser.getInt("type"));
+
+                        synchronized (this) {
+                            vesti.setAuthor(user);
+                        }
+                    }
+
+                    preparedStatement = connection.prepareStatement("select * from kategorija where name = ?");
+                    preparedStatement.setString(1, resultSet.getString("kategorija"));
+                    resultSetCategory = preparedStatement.executeQuery();
+
+                    while (resultSetCategory.next()){
+                        Kategorija category = new Kategorija(resultSetCategory.getString("name"), resultSetCategory.getString("description"));
+
+                        synchronized (this) {
+                            vesti.setKategorija(category);
+                        }
+                    }
+
+                }
+
+                vestiList.add(vesti);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return vestiList;
+    }
+
+
+    @Override
+    public List<Tag> allTagByNews(Integer id) {
+        List<Tag> tagList = new ArrayList<>();
+
+        Connection connection = null;
+        Statement statement = null;
+
+        ResultSet resultSet = null;
+        ResultSet resultSetUser = null;
+        ResultSet resultSetCategory = null;
+
+
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("select * from tag_vesti where idVest = ?");
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Tag tag = tagRepository.findTagById(resultSet.getInt("idTag"));
+                tagList.add(tag);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+
+        }
+
+        return tagList;
+    }
+
 
 }

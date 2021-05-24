@@ -1,5 +1,6 @@
 package rs.raf.demo.services;
 
+import rs.raf.demo.entities.Tag;
 import rs.raf.demo.entities.Vesti;
 import rs.raf.demo.repositories.vesti.VestiRepository;
 
@@ -23,6 +24,10 @@ public class VestiService {
         return this.vestiRepository.allNews();
     }
 
+    public List<Vesti> allNewsByVisits() {
+        return this.vestiRepository.allNewsByVisits();
+    }
+
     public Vesti findNews(Integer id) {
         return this.vestiRepository.findNews(id);
     }
@@ -33,6 +38,14 @@ public class VestiService {
 
     public List<Vesti> allByCategory(String name) {
         return this.vestiRepository.allByCategory(name);
+    }
+
+    public List<Vesti> allByTag(Integer id) {
+        return this.vestiRepository.allByTag(id);
+    }
+
+    public List<Tag> allTagByNews(Integer id) {
+        return this.vestiRepository.allTagByNews(id);
     }
 
 }

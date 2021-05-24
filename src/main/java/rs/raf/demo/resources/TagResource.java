@@ -36,6 +36,13 @@ public class TagResource {
         return this.tagService.findTag(id);
     }
 
+    @GET
+    @Path("by/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Tag findTagById(@PathParam("id") Integer id) {
+        return this.tagService.findTagById(id);
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -107,6 +107,41 @@ public class MySqlTagRepository extends MySqlAbstractRepository implements TagRe
     }
 
     @Override
+    public Tag findTagById(Integer id) {
+        Tag tag = null;
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = this.newConnection();
+
+            preparedStatement = connection.prepareStatement("SELECT * FROM tag as t where t.id = ?");
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+
+                String mainWord = resultSet.getString("main_word");
+
+                tag = new Tag(id,mainWord);
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            this.closeResultSet(resultSet);
+            this.closeConnection(connection);
+        }
+
+        return tag;
+    }
+
+    @Override
     public void deleteTag(Integer id) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;

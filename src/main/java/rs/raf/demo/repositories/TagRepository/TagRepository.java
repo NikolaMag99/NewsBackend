@@ -8,5 +8,6 @@ public interface TagRepository {
     public Tag addTag(Tag tag);
     public List<Tag> allTags();
     public Tag findTag(String id);
+    public Tag findTagById(Integer id);
     public void deleteTag(Integer id);
 }
