@@ -20,6 +20,10 @@ public class VestiService {
         return this.vestiRepository.addNews(vesti);
     }
 
+    public Vesti updateNews(Vesti vesti) {
+        return this.vestiRepository.updateNews(vesti);
+    }
+
     public List<Vesti> allNews() {
         return this.vestiRepository.allNews();
     }

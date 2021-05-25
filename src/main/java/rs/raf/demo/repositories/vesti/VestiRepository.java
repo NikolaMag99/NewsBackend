@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface VestiRepository {
     public Vesti addNews(Vesti vesti);
+    public Vesti updateNews(Vesti vesti);
     public List<Vesti> allNews();
     public List<Vesti> allNewsByVisits();
     public Vesti findNews(Integer id);

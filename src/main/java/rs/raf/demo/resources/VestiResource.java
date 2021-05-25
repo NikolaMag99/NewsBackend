@@ -40,6 +40,14 @@ public class VestiResource {
         return this.vestiService.addNews(vesti);
     }
 
+
+    @POST
+    @Path("/update")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Vesti updateNews(@Valid Vesti vesti) {
+        return this.vestiService.updateNews(vesti);
+    }
+
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -33,7 +33,6 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             String[] generatedColumns = {"id"};
 
 
-
             preparedStatement = connection.prepareStatement("select * from kategorija as k where name equals ", generatedColumns);
 
             preparedStatement = connection.prepareStatement("INSERT INTO vest (title, content, createdAt, visits, author, kategorija) VALUES(?, ?,?, ?,?,?)", generatedColumns);
@@ -67,6 +66,43 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
     }
 
     @Override
+    public Vesti updateNews(Vesti vesti) {
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        ResultSet resultSetCategory = null;
+
+        try {
+            connection = this.newConnection();
+
+
+                preparedStatement = connection.prepareStatement("update vest as v set v.title = ?, v.content = ?, v.author = ?, v.kategorija = ?  where v.id = ?");
+                preparedStatement.setString(1, vesti.getTitle());
+                preparedStatement.setString(2, vesti.getContent());
+                preparedStatement.setString(3, vesti.getAuthor().getEmail());
+                preparedStatement.setString(4, vesti.getKategorija().getName());
+                preparedStatement.setInt(5, vesti.getId());
+                preparedStatement.executeUpdate();
+
+                preparedStatement.close();
+                connection.close();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeStatement(preparedStatement);
+            if (resultSet != null) {
+                this.closeResultSet(resultSet);
+            }
+            this.closeConnection(connection);
+        }
+
+        return vesti;
+    }
+
+    @Override
     public List<Vesti> allNews() {
         List<Vesti> vestiList = new ArrayList<>();
 
@@ -78,6 +114,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         ResultSet resultSetCategory = null;
 
         PreparedStatement preparedStatement = null;
+        int i = 0;
 
         try {
             connection = this.newConnection();
@@ -85,7 +122,8 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             statement = connection.createStatement();
             resultSet = statement.executeQuery("select * from vest order by createdAt desc");
 
-            while (resultSet.next()){
+            while (i < 10 && resultSet.next()) {
+            i++;
                 Vesti vesti = new Vesti(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"), resultSet.getDate("createdAt"));
                 vesti.setVisits(resultSet.getInt("visits"));
 
@@ -93,7 +131,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
                 preparedStatement.setString(1, resultSet.getString("author"));
                 resultSetUser = preparedStatement.executeQuery();
 
-                while (resultSetUser.next()){
+                while (resultSetUser.next()) {
                     User user = new User(resultSetUser.getString("email"), resultSetUser.getString("first_name"), resultSetUser.getString("last_name"), resultSetUser.getString("password"));
                     user.setStatus(resultSetUser.getInt("status"));
                     user.setType(resultSetUser.getInt("type"));
@@ -107,14 +145,13 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
                 preparedStatement.setString(1, resultSet.getString("kategorija"));
                 resultSetCategory = preparedStatement.executeQuery();
 
-                while (resultSetCategory.next()){
-                     Kategorija category = new Kategorija(resultSetCategory.getString("name"), resultSetCategory.getString("description"));
+                while (resultSetCategory.next()) {
+                    Kategorija category = new Kategorija(resultSetCategory.getString("name"), resultSetCategory.getString("description"));
 
                     synchronized (this) {
                         vesti.setKategorija(category);
                     }
                 }
-
                 vestiList.add(vesti);
             }
 
@@ -139,6 +176,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         ResultSet resultSet = null;
         ResultSet resultSetUser = null;
         ResultSet resultSetCategory = null;
+        int i = 0;
 
         PreparedStatement preparedStatement = null;
 
@@ -146,9 +184,10 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             connection = this.newConnection();
 
             statement = connection.createStatement();
-            resultSet = statement.executeQuery("select * from vest order by visits desc");
+            resultSet = statement.executeQuery("select * from vest WHERE createdAt BETWEEN NOW() - INTERVAL 30 DAY AND NOW() order by visits desc");
 
-            while (resultSet.next()){
+            while (i < 10 && resultSet.next()){
+                i++;
                 Vesti vesti = new Vesti(resultSet.getInt("id"), resultSet.getString("title"), resultSet.getString("content"), resultSet.getDate("createdAt"));
                 vesti.setVisits(resultSet.getInt("visits"));
 
@@ -216,6 +255,11 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
                 String content = resultSet.getString("content");
                 Date createdAt = resultSet.getDate("createdAt");
                 Integer visits = resultSet.getInt("visits");
+                visits++;
+                preparedStatement = connection.prepareStatement("update vest as v set v.visits = ? where v.id = ?");
+                preparedStatement.setInt(1, visits);
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
                 vesti = new Vesti(id, title, content, createdAt,visits);
 
 
