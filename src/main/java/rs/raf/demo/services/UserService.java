@@ -42,23 +42,23 @@ public class UserService {
                 .sign(algorithm);
     }
 
-//    public boolean isAuthorized(String token){
-//        Algorithm algorithm = Algorithm.HMAC256("secret");
-//        JWTVerifier verifier = JWT.require(algorithm)
-//                .build();
-//        DecodedJWT jwt = verifier.verify(token);
-//
-//        String username = jwt.getSubject();
-////        jwt.getClaim("role").asString();
-//
-//        User user = this.userRepository.findUser(username);
-//
-//        if (user == null){
-//            return false;
-//        }
-//
-//        return true;
-//    }
+    public boolean isAuthorized(String token){
+        Algorithm algorithm = Algorithm.HMAC256("secret");
+        JWTVerifier verifier = JWT.require(algorithm)
+                .build();
+        DecodedJWT jwt = verifier.verify(token);
+
+        String email = jwt.getSubject();
+//        jwt.getClaim("role").asString();
+
+        User user = this.userRepository.findUser(email);
+
+        if (user == null){
+            return false;
+        }
+
+        return true;
+    }
 
 
 

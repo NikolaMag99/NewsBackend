@@ -1,6 +1,5 @@
 package rs.raf.demo.resources;
 
-import rs.raf.demo.entities.Kategorija;
 import rs.raf.demo.entities.User;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.services.UserService;
@@ -27,13 +26,13 @@ public class UserResource {
     {
         Map<String, String> response = new HashMap<>();
 
-        String jwt = this.userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+        String jwt = this.userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         if (jwt == null) {
             response.put("message", "These credentials do not match our records");
             return Response.status(422, "Unprocessable Entity").entity(response).build();
         }
 
-        response.put("jwt", this.userService.login(loginRequest.getUsername(), loginRequest.getPassword()));
+        response.put("jwt",jwt);
 
         return Response.ok(response).build();
     }

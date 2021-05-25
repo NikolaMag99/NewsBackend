@@ -28,9 +28,9 @@ public class AuthFilter implements ContainerRequestFilter {
             token = token.replace("Bearer ", "");
         }
 
-//        if (!this.userService.isAuthorized(token)) {
-//            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
-//        }
+        if (!this.userService.isAuthorized(token)) {
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+        }
     }
 
     private boolean isAuthRequired(ContainerRequestContext req) {
