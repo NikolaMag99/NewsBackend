@@ -27,6 +27,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         ResultSet resultSet = null;
         ResultSet resultSetCategory = null;
 
+
         try {
             connection = this.newConnection();
 
@@ -406,13 +407,10 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         Statement statement = null;
 
         ResultSet resultSet = null;
-        ResultSet resultSetAutor = null;
-        ResultSet resultSetTag = null;
         ResultSet resultSetUser = null;
         ResultSet resultSetCategory = null;
 
         PreparedStatement preparedStatement = null;
-        PreparedStatement preparedStatement1 = null;
 
         try {
             connection = this.newConnection();
@@ -487,12 +485,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
         List<Tag> tagList = new ArrayList<>();
 
         Connection connection = null;
-        Statement statement = null;
-
         ResultSet resultSet = null;
-        ResultSet resultSetUser = null;
-        ResultSet resultSetCategory = null;
-
 
         PreparedStatement preparedStatement = null;
 

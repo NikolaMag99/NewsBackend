@@ -25,7 +25,7 @@ public class HelloApplication extends ResourceConfig {
         // Ukljucujemo validaciju
         property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
 
-        // Definisemo implementacije u dependency container-u
+
         AbstractBinder binder = new AbstractBinder() {
             @Override
             protected void configure() {
@@ -45,6 +45,6 @@ public class HelloApplication extends ResourceConfig {
         register(binder);
 
         // Ucitavamo resurse
-        packages("rs.raf.demo.resources");
+        packages("rs.raf.demo");
     }
 }

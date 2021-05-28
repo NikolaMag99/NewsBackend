@@ -20,10 +20,10 @@ public class UserService {
 
     public String login(String email, String password)
     {
-        String hashedPassword = DigestUtils.sha256Hex(password);
+//        String hashedPassword = DigestUtils.sha256Hex(password);
 
         User user = this.userRepository.findUser(email);
-        if (user == null || !user.getPassword().equals(hashedPassword)) {
+        if (user == null || !user.getPassword().equals(password)) {
             return null;
         }
 
@@ -38,7 +38,7 @@ public class UserService {
                 .withIssuedAt(issuedAt)
                 .withExpiresAt(expiresAt)
                 .withSubject(email)
-                .withClaim("role", user.getType())
+                .withClaim("type", user.getType())
                 .sign(algorithm);
     }
 

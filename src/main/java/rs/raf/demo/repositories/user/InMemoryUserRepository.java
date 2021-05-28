@@ -13,6 +13,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class InMemoryUserRepository extends MySqlAbstractRepository implements UserRepository {
 
 
+
+
     @Override
     public User findUser(String email) {
         User user = null;
