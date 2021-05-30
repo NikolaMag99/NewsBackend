@@ -1,5 +1,6 @@
 package rs.raf.demo.resources;
 
+import rs.raf.demo.entities.Komentar;
 import rs.raf.demo.entities.Tag;
 import rs.raf.demo.entities.Vesti;
 import rs.raf.demo.services.TagService;
@@ -81,5 +82,12 @@ public class VestiResource {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Tag> allTagByNews(@PathParam("id") Integer id) {
         return this.vestiService.allTagByNews(id);
+    }
+
+    @GET
+    @Path("/comments/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Komentar> allCommentsByNews(@PathParam("id") Integer id) {
+        return this.vestiService.allCommentsByNews(id);
     }
 }

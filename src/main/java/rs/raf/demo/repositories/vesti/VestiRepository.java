@@ -1,5 +1,6 @@
 package rs.raf.demo.repositories.vesti;
 
+import rs.raf.demo.entities.Komentar;
 import rs.raf.demo.entities.Tag;
 import rs.raf.demo.entities.Vesti;
 
@@ -15,4 +16,5 @@ public interface VestiRepository {
     public List<Vesti> allByCategory(String name);
     public List<Vesti> allByTag(Integer id);
     public List<Tag> allTagByNews(Integer id);
+    public List<Komentar> allCommentsByNews(Integer id);
 }

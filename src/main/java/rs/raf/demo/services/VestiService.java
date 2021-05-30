@@ -1,5 +1,6 @@
 package rs.raf.demo.services;
 
+import rs.raf.demo.entities.Komentar;
 import rs.raf.demo.entities.Tag;
 import rs.raf.demo.entities.Vesti;
 import rs.raf.demo.repositories.vesti.VestiRepository;
@@ -50,6 +51,10 @@ public class VestiService {
 
     public List<Tag> allTagByNews(Integer id) {
         return this.vestiRepository.allTagByNews(id);
+    }
+
+    public List<Komentar> allCommentsByNews(Integer id) {
+        return this.vestiRepository.allCommentsByNews(id);
     }
 
 }

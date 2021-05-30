@@ -26,7 +26,7 @@ public class MySqlCommentRepository extends MySqlAbstractRepository implements C
             String[] generatedColumns = {"id"};
 
             preparedStatement = connection.prepareStatement("INSERT INTO komentar (author, content, createdAt, vest) VALUES(?,?,?,?)", generatedColumns);
-            java.sql.Date sqlDate = new java.sql.Date(komentar.getCreatedAt().getTime());
+            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
             preparedStatement.setString(1, komentar.getAuthor());
             preparedStatement.setString(2, komentar.getContent());
             preparedStatement.setDate(3, sqlDate);
