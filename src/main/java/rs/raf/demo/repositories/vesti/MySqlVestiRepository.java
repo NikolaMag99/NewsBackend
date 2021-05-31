@@ -38,7 +38,7 @@ public class MySqlVestiRepository extends MySqlAbstractRepository implements Ves
             preparedStatement = connection.prepareStatement("select * from kategorija as k where name equals ", generatedColumns);
 
             preparedStatement = connection.prepareStatement("INSERT INTO vest (title, content, createdAt, visits, author, kategorija) VALUES(?, ?,?, ?,?,?)", generatedColumns);
-            java.sql.Date sqlDate = new java.sql.Date(vesti.getCreatedAt().getTime());
+            java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
             preparedStatement.setString(1, vesti.getTitle());
             preparedStatement.setString(2, vesti.getContent());
             preparedStatement.setDate(3, sqlDate);

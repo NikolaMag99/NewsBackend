@@ -35,6 +35,10 @@ public class Vesti {
     public Vesti() {
     }
 
+    public Vesti(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 
     public Vesti(int id, String title, String content, Date createdAt) {
         this.id = id;
